@@ -2,10 +2,14 @@
 //
 
 #include <stdio.h>
+#include <iostream>
+#include "GamePro-00-20/Fillorino.h"
+
+using namespace std;
 
 int main()
 {
-	int test = foo(9000);
+	game();
 
-	print("\n %d \n", test);
+	return 0;
 }
