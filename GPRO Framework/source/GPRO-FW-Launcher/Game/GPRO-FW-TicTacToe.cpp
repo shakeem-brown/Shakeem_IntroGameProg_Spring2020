@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include <iostream>
 
-using namespace std;
+#include <stdio.h>
+
+
 //-----------------------------------------------------------------------------
 // DECLARATIONS
 
@@ -66,9 +66,7 @@ int launchTicTacToe()
 
 	gs_tictactoe_reset(game);
 
-	
-		cout << "|" << endl;
-	
+
 
 	return 0;
 }
