@@ -223,7 +223,7 @@ int launchTicTacToe()
 			}
 			
 			//Make the below a function.  Then, put said function inside of each 'spot'!
-			if (48 < open < 58)
+			if (48 < open && open < 58)
 			{
 				temp1 = player1Switcher(P1, P2);
 				temp2 = player2Switcher(P1, P2);
@@ -694,17 +694,6 @@ bool checkGameState(char spot1, char spot2, char spot3, char spot4, char spot5, 
 	}
 	return false;
 }
-/*
-bool drawState(char spot1, char spot2, char spot3, char spot4, char spot5, char spot6, char spot7, char spot8, char spot9, char p1)
-{
-	if (spot1 == p1 || spot2 == p1 || spot3 == p1 || spot4 == p1 || spot5 == p1 || spot6 == p1 || spot7 == p1 || spot8 == p1 || spot9 == p1)
-	{
-		cout << "DRAW!" << endl;
-		return true;
-	}
-	return false;
-}
-*/
 
 bool playAgain(char input)
 {
