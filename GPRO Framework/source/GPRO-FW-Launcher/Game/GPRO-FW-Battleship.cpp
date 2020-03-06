@@ -68,16 +68,17 @@ inline gs_battleship_index gs_battleship_reset(gs_battleship game)
 
 
 bool checkShipState(char* ship, int shipID);
-char* carrierShip(bool alive, bool hit, int row, int column, char* ship);
-char* battleship(bool alive, bool hit, int row, int column, char* ship);
-char* submarine(bool alive, bool hit, int row, int column, char* ship);
-char* destroyerShip(bool alive, bool hit, int row, int column, char* ship);
-char* cursierShip(bool alive, bool hit, int row, int column, char* ship);
+char* carrierShip(bool alive, bool hit, int* row, int* column, char* ship, int ID);
+char* battleshipShip(bool alive, bool hit, int* row, int* column, char* ship, int ID);
+char* submarineShip(bool alive, bool hit, int* row, int* column, char* ship, int ID);
+char* destroyerShip(bool alive, bool hit, int* row, int* column, char* ship, int ID);
+char* cruiserShip(bool alive, bool hit, int* row, int* column, char* ship, int ID);
 int designBoard(char array[10][10]);
 void showOffBoard(bool player, char array[10][10]);
-void showDefBoard(bool player, char array[10][10]);
+void showDefBoard(bool player, char array[10][10], int*& row, int*& column);
 bool playerSwapTurn(bool player);
-void placement();
+void placement(int*& row, int*& column);
+char* modifyDefBoard(bool player, static char array[][10], int*& row, int*& column, char ship1[5], char ship2[5], char ship3[5], char ship4[5], char ship5[5]);
 
 
 //-----------------------------------------------------------------------------
@@ -88,8 +89,13 @@ int launchBattleship()
 	gs_battleship game;
 	gs_battleship_reset(game);
 
+	const int boardRow = 10;
+	const int boardColumn = 10;
+
 	bool playerTurn = true;
-	char arrayBoard[10][10];
+	bool hit = false;
+	bool destroyed = false;
+	char arrayBoard[boardRow][boardColumn];
 	bool ship1 = true, ship2 = true, ship3 = true, ship4 = true, ship5 = true;
 	char carrier[] = { '5','5','5','5','5' }; 
 	char battleship[] = { '4', '4', '4', '4' }; 
@@ -101,9 +107,44 @@ int launchBattleship()
 	int destroyerID = 3;
 	int battleshipID = 4;
 	int carrierID = 5;
-
+	int row[5], column[5];
+	int* rowPtr = row;
+	int* colPtr = column;
+	char** tempArray = 0;
+	//Beginning of code that would be moved to a "buildBoard" function.
+	tempArray = new char* [boardRow];
 
 	designBoard(arrayBoard);
+
+	placement(rowPtr, colPtr);
+
+	for (int i = 0; i < 10; i++) 
+	{
+		tempArray[i] = new char[boardColumn];
+		for (int j = 0; j < 10; j++) 
+		{
+			tempArray[i][j] = arrayBoard[i][j];
+		}
+	}
+		
+	**tempArray = *modifyDefBoard(playerTurn, arrayBoard, rowPtr, colPtr, carrier, battleship, submarine, destroyer, cruiser);
+
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			arrayBoard[i][j] = tempArray[i][j];
+			cout << arrayBoard[i][j];
+		}
+		cout << endl;
+	}
+	//End of code that would be moved to a "buildBoard" function.
+	carrierShip(destroyed, hit, row, column, carrier, carrierID);
+	battleshipShip(destroyed, hit, row, column, battleship, battleshipID);
+	submarineShip(destroyed, hit, row, column, submarine, submarineID);
+	destroyerShip(destroyed, hit, row, column, destroyer, destroyerID);
+	cruiserShip(destroyed, hit, row, column, cruiser, cruiserID);
+	
 	showOffBoard(playerTurn, arrayBoard);
 	playerSwapTurn(playerTurn);
 
@@ -111,12 +152,12 @@ int launchBattleship()
 	{
 		cout << "You Win!";
 	}
-
+	delete[] tempArray;
 	return 0;
+	
 }
-
 //
-//Ship based functions
+//State based function
 bool checkShipState(char* ship, int shipID)
 {
 	char destroyed2[2] = { 'X', 'X' };
@@ -162,7 +203,61 @@ bool checkShipState(char* ship, int shipID)
 	else
 		return true;
 }
-char* carrierShip(bool alive, bool hit, int row, int column, char* ship)
+bool checkHit(int& row, int& column, int ID) {
+	bool hit = false;
+	if (ID == 1) {
+		if (row < 11 || row > 0 )
+		{
+			if (column < 11 || column > 0)
+			{
+				hit = true;
+			}
+		}
+	}
+	else if (ID == 2)
+	{
+		if (row < 11 || row > 0)
+		{
+			if (column < 11 || column > 0)
+			{
+				hit = true;
+			}
+		}
+	}
+	else if (ID == 3)
+	{
+			if (row < 11 || row > 0)
+			{
+				if (column < 11 || column > 0)
+				{
+					hit = true;
+				}
+			}
+	}
+	else if (ID == 4)
+	{
+		if (row < 11 || row > 0)
+		{
+			if (column < 11 || column > 0)
+			{
+				hit = true;
+			}
+		}
+	}
+	else if (ID == 5)
+	{
+		if (row < 11 || row > 0)
+		{
+			if (column < 11 || column > 0)
+			{
+				hit = true;
+			}
+		}
+	}
+	return hit;
+}
+//Ship based functions
+char* carrierShip(bool alive, bool hit, int* row, int* column, char* ship, int ID)
 {
 	alive = true;
 	int amountHit = 0;
@@ -176,7 +271,7 @@ char* carrierShip(bool alive, bool hit, int row, int column, char* ship)
 	
 	return ship;
 }
-char* battleship(bool alive, bool hit, int row, int column, char* ship)
+char* battleshipShip(bool alive, bool hit, int* row, int* column, char* ship, int ID)
 {
 	alive = true;
 	int amountHit = 0;
@@ -189,7 +284,7 @@ char* battleship(bool alive, bool hit, int row, int column, char* ship)
 	}
 	return ship;
 }
-char* submarine(bool alive, bool hit, int row, int column, char* ship)
+char* submarineShip(bool alive, bool hit, int* row, int* column, char* ship, int ID)
 {
 	alive = true;
 	int amountHit = 0;
@@ -202,7 +297,7 @@ char* submarine(bool alive, bool hit, int row, int column, char* ship)
 	}
 	return ship;
 }
-char* destroyerShip(bool alive, bool hit, int row, int column, char* ship)
+char* destroyerShip(bool alive, bool hit, int* row, int* column, char* ship, int ID)
 {
 	alive = true;
 	int amountHit = 0;
@@ -215,7 +310,7 @@ char* destroyerShip(bool alive, bool hit, int row, int column, char* ship)
 	}
 	return ship;
 }
-char* cursierShip(bool alive, bool hit, int row, int column, char* ship)
+char* cruiserShip(bool alive, bool hit, int* row, int* column, char* ship, int ID)
 {
 	alive = true;
 	int amountHit = 0;
@@ -228,7 +323,7 @@ char* cursierShip(bool alive, bool hit, int row, int column, char* ship)
 	}
 	return ship;
 }
-//Board based functions
+//Make board functions
 int designBoard(char array[10][10])
 {
 	for (int i = 0; i < 10; i++)
@@ -240,79 +335,149 @@ int designBoard(char array[10][10])
 	}
 	return 0;
 }
-void placement()
+void placement(int*& row, int*& column)
 {
 	bool valid = true;
-	do
+	int choice;
+
+	int tempRow = 0;
+	int tempCol = 0;
+	for (int shipID = 0; shipID < 5; shipID++)
 	{
-		int choice;
-		int row = 0;
-		int column = 0;
-
-		cout << "Would you like to place the Carrier horizontal(1) or vertical(2)?" << endl;
+		do
+		{
+		string shipname[5] = { "Cruiser", "Submarine", "Destroyer", "Battleship", "Carrier" };
+		cout << "Would you like to place the " << shipname[shipID] << " horizontal(1) or vertical(2)?";
 		cin >> choice;
-		if (choice == 1)
-		{
-			//Horz
-			cout << "Which row? (1-10): ";
-			cin >> row;
-			do
-			{
-				if (row > 10 || row < 0)
-				{
-					cout << "Invalid Choice!" << endl;
-					cout << "Please try again!" << endl;
-				}
-				else
-				{
-					cout << "Which column is the first spot? (1-10): ";
-					cin >> column;
-					do
-					{
-						if (column > 10 || column < 0) {
-							cout << "Invalid Choice!" << endl;
-							cout << "Please try again!" << endl;
-						}
-					} while (column > 10 || column < 0);
-				}
-			} while (row > 10 || row < 0);
-		}
-		else if (choice == 2)
-		{
-			//Vert
-			cout << "Which column? (1-10): ";
-			cin >> column;
-			do
-			{
-				if (column > 10 || column < 0)
-				{
-					cout << "Invalid Choice!" << endl;
-					cout << "Please try again!" << endl;
-				}
-				else
-				{
-					cout << "Which row is the first spot? (1-10): ";
-					cin >> row;
-					do
-					{
-						if (row > 10 || row < 0) {
-							cout << "Invalid Choice!" << endl;
-							cout << "Please try again!" << endl;
-						}
-					} while (row > 10 || row < 0);
-				}
-			} while (column > 10 || column < 0);
-		}
-		else
-		{
-			cout << "Invalid Choice!" << endl;
-			cout << "Please try again!" << endl;
-			valid = false;
-		}
-	} while (valid != false);
 
+			if (choice == 1)
+			{
+				//Horz
+				cout << "Which row? (1-10): ";
+				cin >> tempRow;
+				*(row + shipID) = tempRow;
+				do
+				{
+					if (tempRow > 10 || tempRow < 0)
+					{
+						cout << "Invalid Choice!" << endl;
+						cout << "Please try again!" << endl;
+					}
+					else
+					{
+						cout << "Which column is the first spot? (1-10): ";
+						cin >> tempCol;
+						*(column + shipID) = tempCol;
+						do
+						{
+							if (tempCol > 10 || tempCol < 0) {
+								cout << "Invalid Choice!" << endl;
+								cout << "Please try again!" << endl;
+							}
+						} while (tempCol > 10 || tempCol < 0);
+						cout << endl << endl;
+					}
+				} while (tempRow > 10 || tempRow < 0);
+			}
+			else if (choice == 2)
+			{
+				//Vert
+				cout << "Which column? (1-10): ";
+				cin >> tempCol;
+				*(column + shipID) = tempCol;
+				do
+				{
+					if (tempCol > 10 || tempCol < 0)
+					{
+						cout << "Invalid Choice!" << endl;
+						cout << "Please try again!" << endl;
+					}
+					else
+					{
+						cout << "Which row is the first spot? (1-10): ";
+						cin >> tempRow;
+						*(row + shipID) = tempRow;
+						do
+						{
+							if (tempRow > 10 || tempRow < 0) {
+								cout << "Invalid Choice!" << endl;
+								cout << "Please try again!" << endl;
+							}
+						} while (tempRow > 10 || tempRow < 0);
+						cout << endl << endl;
+					}
+				} while (tempCol > 10 || tempCol < 0);
+			}
+			else
+			{
+				cout << "Invalid Choice!" << endl;
+				cout << "Please try again!" << endl;
+				valid = false;
+			}
+		} while (valid == false);
+	}
 }
-void showDefBoard(bool player, char array[10][10])
+char* modifyDefBoard(bool player, static char array[][10], int*& row, int*& column, char ship1[5], char ship2[5], char ship3[5], char ship4[5], char ship5[5]) {
+	int shipRow = 0;
+	int shipCol = 0;
+	int shipID = 0;
+	if (player == true) 
+	{
+		shipRow = *(row + shipID);
+		shipCol = *(column + shipID);
+		array[shipRow][shipCol] = *(ship1 + shipID);
+		shipID++;
+
+		shipRow = *(row + shipID);
+		shipCol = *(column + shipID);
+		array[shipRow][shipCol] = *(ship2 + shipID);
+		shipID++;
+
+		shipRow = *(row + shipID);
+		shipCol = *(column + shipID);
+		array[shipRow][shipCol] = *(ship3 + shipID);
+		shipID++;
+
+		shipRow = *(row + shipID);
+		shipCol = *(column + shipID);
+		array[shipRow][shipCol] = *(ship4 + shipID);
+		shipID++;
+
+		shipRow = *(row + shipID);
+		shipCol = *(column + shipID);
+		array[shipRow][shipCol] = *(ship5 + shipID);
+	}
+
+	else 
+	{
+		shipRow = *(row + shipID);
+		shipCol = *(column + shipID);
+		array[shipRow][shipCol] = *(ship1 + shipID);
+		shipID++;
+
+		shipRow = *(row + shipID);
+		shipCol = *(column + shipID);
+		array[shipRow][shipCol] = *(ship2 + shipID);
+		shipID++;
+
+		shipRow = *(row + shipID);
+		shipCol = *(column + shipID);
+		array[shipRow][shipCol] = *(ship3 + shipID);
+		shipID++;
+
+		shipRow = *(row + shipID);
+		shipCol = *(column + shipID);
+		array[shipRow][shipCol] = *(ship4 + shipID);
+		shipID++;
+
+		shipRow = *(row + shipID);
+		shipCol = *(column + shipID);
+		array[shipRow][shipCol] = *(ship5 + shipID);
+	}
+	return array[10];
+}
+//Show board functions
+void showDefBoard(bool player, char array[10][10], int*& row, int*& column)
 {
 	if (player == true) //Player 1
 	{
@@ -391,5 +556,255 @@ bool playerSwapTurn(bool player)
 	}
 	return player;
 }
-
+//
 //-----------------------------------------------------------------------------		cin >> xPos >> junk >> YPos;   (_, _)
+/*
+void stuff(){
+			if (shipID == 2) {
+			cout << "Would you like to place the " << shipname[shipID] << " horizontal(1) or vertical(2)?" << endl;
+			cin >> choice;
+			if (choice == 1)
+			{
+			//Horz
+			cout << "Which row? (1-10): ";
+			cin >> *row;
+			do
+			{
+				if (*row > 10 || *row < 0)
+				{
+					cout << "Invalid Choice!" << endl;
+					cout << "Please try again!" << endl;
+				}
+				else
+				{
+					cout << "Which column is the first spot? (1-10): ";
+					cin >> *column;
+					do
+					{
+						if (*column > 10 || *column < 0) {
+							cout << "Invalid Choice!" << endl;
+							cout << "Please try again!" << endl;
+						}
+					} while (*column > 10 || *column < 0);
+				}
+			} while (*row > 10 || *row < 0);
+			}
+			else if (choice == 2)
+			{
+			//Vert
+			cout << "Which column? (1-10): ";
+			cin >> *column;
+			do
+			{
+				if (*column > 10 || *column < 0)
+				{
+					cout << "Invalid Choice!" << endl;
+					cout << "Please try again!" << endl;
+				}
+				else
+				{
+					cout << "Which row is the first spot? (1-10): ";
+					cin >> *row;
+					do
+					{
+						if (*row > 10 || *row < 0) {
+							cout << "Invalid Choice!" << endl;
+							cout << "Please try again!" << endl;
+						}
+					} while (*row > 10 || *row < 0);
+				}
+			} while (*column > 10 || *column < 0);
+			}
+			else
+			{
+			cout << "Invalid Choice!" << endl;
+			cout << "Please try again!" << endl;
+			valid = false;
+			}
+			}
+			if (shipID == 3) {
+			cout << "Would you like to place the " << shipname[shipID] << " horizontal(1) or vertical(2)?" << endl;
+			cin >> choice;
+			if (choice == 1)
+			{
+			//Horz
+			cout << "Which row? (1-10): ";
+			cin >> *row;
+			do
+			{
+				if (*row > 10 || *row < 0)
+				{
+					cout << "Invalid Choice!" << endl;
+					cout << "Please try again!" << endl;
+				}
+				else
+				{
+					cout << "Which column is the first spot? (1-10): ";
+					cin >> *column;
+					do
+					{
+						if (*column > 10 || *column < 0) {
+							cout << "Invalid Choice!" << endl;
+							cout << "Please try again!" << endl;
+						}
+					} while (*column > 10 || *column < 0);
+				}
+			} while (*row > 10 || *row < 0);
+			}
+			else if (choice == 2)
+			{
+			//Vert
+			cout << "Which column? (1-10): ";
+			cin >> *column;
+			do
+			{
+				if (*column > 10 || *column < 0)
+				{
+					cout << "Invalid Choice!" << endl;
+					cout << "Please try again!" << endl;
+				}
+				else
+				{
+					cout << "Which row is the first spot? (1-10): ";
+					cin >> *row;
+					do
+					{
+						if (*row > 10 || *row < 0) {
+							cout << "Invalid Choice!" << endl;
+							cout << "Please try again!" << endl;
+						}
+					} while (*row > 10 || *row < 0);
+				}
+			} while (*column > 10 || *column < 0);
+			}
+			else
+			{
+			cout << "Invalid Choice!" << endl;
+			cout << "Please try again!" << endl;
+			valid = false;
+			}
+			}	if (shipID == 4) {
+			cout << "Would you like to place the " << shipname[shipID] << " horizontal(1) or vertical(2)?" << endl;
+			cin >> choice;
+			if (choice == 1)
+			{
+			//Horz
+			cout << "Which row? (1-10): ";
+			cin >> *row;
+			do
+			{
+				if (*row > 10 || *row < 0)
+				{
+					cout << "Invalid Choice!" << endl;
+					cout << "Please try again!" << endl;
+				}
+				else
+				{
+					cout << "Which column is the first spot? (1-10): ";
+					cin >> *column;
+					do
+					{
+						if (*column > 10 || *column < 0) {
+							cout << "Invalid Choice!" << endl;
+							cout << "Please try again!" << endl;
+						}
+					} while (*column > 10 || *column < 0);
+				}
+			} while (*row > 10 || *row < 0);
+			}
+			else if (choice == 2)
+			{
+			//Vert
+			cout << "Which column? (1-10): ";
+			cin >> *column;
+			do
+			{
+				if (*column > 10 || *column < 0)
+				{
+					cout << "Invalid Choice!" << endl;
+					cout << "Please try again!" << endl;
+				}
+				else
+				{
+					cout << "Which row is the first spot? (1-10): ";
+					cin >> *row;
+					do
+					{
+						if (*row > 10 || *row < 0) {
+							cout << "Invalid Choice!" << endl;
+							cout << "Please try again!" << endl;
+						}
+					} while (*row > 10 || *row < 0);
+				}
+			} while (*column > 10 || *column < 0);
+			}
+			else
+			{
+			cout << "Invalid Choice!" << endl;
+			cout << "Please try again!" << endl;
+			valid = false;
+			}
+			}	if (shipID == 5) {
+			cout << "Would you like to place the " << shipname[shipID] << " horizontal(1) or vertical(2)?" << endl;
+			cin >> choice;
+			if (choice == 1)
+			{
+			//Horz
+			cout << "Which row? (1-10): ";
+			cin >> *row;
+			do
+			{
+				if (*row > 10 || *row < 0)
+				{
+					cout << "Invalid Choice!" << endl;
+					cout << "Please try again!" << endl;
+				}
+				else
+				{
+					cout << "Which column is the first spot? (1-10): ";
+					cin >> *column;
+					do
+					{
+						if (*column > 10 || *column < 0) {
+							cout << "Invalid Choice!" << endl;
+							cout << "Please try again!" << endl;
+						}
+					} while (*column > 10 || *column < 0);
+				}
+			} while (*row > 10 || *row < 0);
+			}
+			else if (choice == 2)
+			{
+			//Vert
+			cout << "Which column? (1-10): ";
+			cin >> *column;
+			do
+			{
+				if (*column > 10 || *column < 0)
+				{
+					cout << "Invalid Choice!" << endl;
+					cout << "Please try again!" << endl;
+				}
+				else
+				{
+					cout << "Which row is the first spot? (1-10): ";
+					cin >> *row;
+					do
+					{
+						if (*row > 10 || *row < 0) {
+							cout << "Invalid Choice!" << endl;
+							cout << "Please try again!" << endl;
+						}
+					} while (*row > 10 || *row < 0);
+				}
+			} while (*column > 10 || *column < 0);
+			}
+			else
+			{
+			cout << "Invalid Choice!" << endl;
+			cout << "Please try again!" << endl;
+			valid = false;
+			}
+			}
+		}
+*/
