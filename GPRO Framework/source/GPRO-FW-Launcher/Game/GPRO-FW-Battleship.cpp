@@ -544,6 +544,7 @@ void showOffBoard(bool player, char array[10][10])
 	}
 }
 //Turn Function
+/*
 bool playerSwapTurn(bool player)
 {
 	if (player == true)
@@ -556,6 +557,8 @@ bool playerSwapTurn(bool player)
 	}
 	return player;
 }
+*/
+
 //
 //-----------------------------------------------------------------------------		cin >> xPos >> junk >> YPos;   (_, _)
 /*

@@ -67,8 +67,10 @@ char player2Assign(char P1, char P2);
 bool moveChecker(int row, int col, char player);
 char spotReturner(int row, int col, char player);
 char spot(char spot, int row, int col);
+
 char player1Switcher(char P1, char P2);
 char player2Switcher(char P1, char P2);
+
 bool overwriteCheck(int row, int col, char);
 bool checkGameState(char spot1, char spot2, char spot3, char spot4, char spot5, char spot6, char spot7, char spot8, char spot9);
 bool Win(char winner);
@@ -259,7 +261,6 @@ bool CharChecker(char input) {
 	return false;
 }
 
-
 bool IntChecker(int input) {
 	if ((input > 3) || (input < 0))
 	{
@@ -449,7 +450,7 @@ char spotReturner(int row, int col, char player)
 		return ' ';
 }
 
-
+//Board function
 char spot(char spot, int row, int col)
 {
 	if (row == 1 && col == 1)
@@ -492,6 +493,7 @@ char spot(char spot, int row, int col)
 		return ' ';
 }
 
+//
 char player1Switcher(char P1, char P2)
 {
 	char temp;
@@ -500,7 +502,6 @@ char player1Switcher(char P1, char P2)
 	P2 = temp;
 	return P1;
 }
-
 char player2Switcher(char P1, char P2) {
 	char temp;
 	temp = P1;
@@ -508,7 +509,7 @@ char player2Switcher(char P1, char P2) {
 	P2 = temp;
 	return P2;
 }
-
+//
 bool overwriteCheck(int row, int col, char spotNum) {
 	if (row == 1 && col == 1)
 	{

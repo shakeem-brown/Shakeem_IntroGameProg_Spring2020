@@ -1,9 +1,13 @@
 // GPRO-FW-Launcher.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
+#include <stdio.h>
 #include <iostream>
+#include "GamePro-00-20/Fillorino.h"
+
+void game();
 int launchTicTacToe();
 int launchBattleship();
+
 using namespace std;
 
 int main()
@@ -13,8 +17,10 @@ int main()
 	do
 	{
 		cout << "What game do you want to play?" << endl;
+		cout << "0) Quit" << endl;
 		cout << "1) TicTacToe" << endl;
 		cout << "2) Battleship" << endl;
+		cout << "3) Number Guess game" << endl;
 		cout << "The Choice: ";
 		cin >> choice;
 		system("cls");
@@ -27,6 +33,15 @@ int main()
 		{
 			launchBattleship();
 			valid = false;
+		}
+		else if (choice == 3)
+		{
+			game();
+			valid = false;
+		}
+		else if (choice == 0) 
+		{
+			return 0;
 		}
 		else
 		{
