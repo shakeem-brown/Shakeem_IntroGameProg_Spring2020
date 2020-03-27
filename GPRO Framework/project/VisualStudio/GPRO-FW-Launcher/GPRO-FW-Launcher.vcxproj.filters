@@ -33,5 +33,8 @@
     <ClCompile Include="..\..\..\source\GPRO-FW-Launcher\GPRO-FW-Launcher_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GPRO-FW-Numbergame.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

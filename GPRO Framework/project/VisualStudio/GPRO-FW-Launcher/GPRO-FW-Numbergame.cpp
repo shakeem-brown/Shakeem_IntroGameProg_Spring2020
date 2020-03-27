@@ -3,31 +3,6 @@
 #include <ctime>
 #include "GamePro-00-20/Fillorino.h"
 
-//This file will house the common logic function
-
-bool playerSwapTurn(bool player)
-{
-	if (player == true)
-	{
-		player = false;
-	}
-	else
-	{
-		player = true;
-	}
-	return player;
-}
-
-void drawBoard(int width, int height, char v[]) {
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			char v[] = {i};
-		}
-	}
-}
-
 using namespace std;
 
 void game()

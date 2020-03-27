@@ -151,7 +151,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\source\GamePro-00-20\Fillorino.cpp" />
+    <ClCompile Include="..\..\..\source\GamePro-00-20\LogicLibrary.cpp" />
+    <ClCompile Include="DisplayLibrary.cpp" />
+    <ClCompile Include="InputLibrary.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Include\GamePro-00-20\Fillorino.h" />

@@ -1,5 +1,7 @@
-#include <iostream>
 #include <stdio.h>
+#include <iostream>
+#include <ctime>
+#include "GamePro-00-20/Fillorino.h"
 
 using namespace std;
 //-----------------------------------------------------------------------------
@@ -67,13 +69,14 @@ char player2Assign(char P1, char P2);
 bool moveChecker(int row, int col, char player);
 char spotReturner(int row, int col, char player);
 char spot(char spot, int row, int col);
+bool playerSwapTurn(bool player);
 
-char player1Switcher(char P1, char P2);
-char player2Switcher(char P1, char P2);
+char player1Swapper(char P1, char P2, bool player);
+char player2Swapper(char P1, char P2, bool player);
 
 bool overwriteCheck(int row, int col, char);
 bool checkGameState(char spot1, char spot2, char spot3, char spot4, char spot5, char spot6, char spot7, char spot8, char spot9);
-bool Win(char winner);
+bool Win(char player);
 bool playAgain(char);
 //const int TRUE = 32;
 
@@ -87,10 +90,13 @@ int launchTicTacToe()
 		int rowNum = 0;
 		int colNum = 0;
 		bool invalid = 0;
+		
 		char P1 = ' ';
 		char P2 = ' ';
 		char temp1;
 		char temp2;
+		bool player = true;
+
 		char spot1 = '1', spot2 = '2', spot3 = '3', spot4 = '4',
 			spot5 = '5', spot6 = '6', spot7 = '7', spot8 = '8', spot9 = '9';
 		char spotty = ' ';
@@ -227,10 +233,19 @@ int launchTicTacToe()
 			//Make the below a function.  Then, put said function inside of each 'spot'!
 			if (48 < open && open < 58)
 			{
-				temp1 = player1Switcher(P1, P2);
-				temp2 = player2Switcher(P1, P2);
+				if (player == true)
+				{
+					temp1 = player1Swapper(P1, P2, player);
+					temp2 = P1;
+				}
+				if (player == false)
+				{
+					temp2 = player2Swapper(P1, P2, player);
+					temp1 = P2;
+				}
 				P1 = temp1;
 				P2 = temp2;
+				player = playerSwapTurn(player);
 				turn++;
 			}
 						
@@ -270,6 +285,7 @@ bool IntChecker(int input) {
 	}
 	return false;
 }
+
 char choose_char(char choice)
 {
 	char player1 = 'x';
@@ -493,23 +509,24 @@ char spot(char spot, int row, int col)
 		return ' ';
 }
 
-//
-char player1Switcher(char P1, char P2)
+char player1Swapper(char P1, char P2, bool player)
 {
 	char temp;
 	temp = P1;
 	P1 = P2;
 	P2 = temp;
 	return P1;
+
 }
-char player2Switcher(char P1, char P2) {
+char player2Swapper(char P1, char P2, bool player)
+{
 	char temp;
 	temp = P1;
 	P1 = P2;
 	P2 = temp;
 	return P2;
 }
-//
+
 bool overwriteCheck(int row, int col, char spotNum) {
 	if (row == 1 && col == 1)
 	{
@@ -649,11 +666,6 @@ bool overwriteCheck(int row, int col, char spotNum) {
 	else 
 		return true;
 }
-bool Win(char winner)
-{
-	cout << "You Win " << winner << "!!!" << endl;
-	return true;
-}
 
 bool checkGameState(char spot1, char spot2, char spot3, char spot4, char spot5, char spot6, char spot7, char spot8, char spot9) {
 	//Horz
@@ -694,29 +706,4 @@ bool checkGameState(char spot1, char spot2, char spot3, char spot4, char spot5, 
 		return true;
 	}
 	return false;
-}
-
-bool playAgain(char input)
-{
-	bool checker = false;
-	do
-	{ 
-		cout << "Play Again? (Y/N)" << endl << endl;
-		cin >> input;
-
-		if (input == 'N' || input == 'n')
-		{
-			return true;
-		}
-		else if (input == 'Y' || input == 'y')
-		{
-			return false;
-		}
-		else
-		{
-			cout << "That is an invalid input." << endl;
-			cout << "Please try again!" << endl;
-		}
-	} while (checker == false);
-		return true;
 }
