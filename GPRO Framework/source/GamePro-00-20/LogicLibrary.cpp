@@ -1,3 +1,10 @@
+/*	This file will house the common logic function
+ *  Purpose:      Houses the Logic funtions for the
+				  various games within this frame work.
+ *	Contributors: This Library was made in collaboration
+				  by Andrew Barnett and Shakeem Brown
+ *********************************************************/
+
 #include <stdio.h>
 #include <iostream>
 #include <ctime>
@@ -5,9 +12,9 @@
 
 using namespace std;
 
-//This file will house the common logic function
-
-//Complete
+/*
+	Purpose:	Swaps the current player with the other player
+*/
 bool playerSwapTurn(bool player)
 {
 	if (player == true)
@@ -21,7 +28,9 @@ bool playerSwapTurn(bool player)
 	return player;
 }
 
-//NextTime
+/*
+	Purpose:	Prompts the player if they would like to play again
+*/
 bool playAgain(char input)
 {
 	bool checker = false;
@@ -47,9 +56,27 @@ bool playAgain(char input)
 	return true;
 }
 
-//NextTime
+/*
+	Purpose:	Displays the player that won
+*/
 bool Win(char player)
 {
 	cout << "You Win " << player << "!!!" << endl;
 	return true;
+}
+
+/*
+	Purpose:	Checks players column/row input
+*/
+bool intChecker(int input, int size) {
+	if ((input > size) || (input < 0))
+	{
+		cout << "That is an invalid input." << endl;
+		cout << "Please try again!" << endl;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

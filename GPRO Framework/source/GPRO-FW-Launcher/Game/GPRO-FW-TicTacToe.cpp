@@ -1,3 +1,10 @@
+/*	TicTacToe game
+ *  Purpose:      Runs the game of TicTacToe using the 
+                  framework library
+ *	Contributors: This game was made in collaboration
+				  by Andrew Barnett and Shakeem Brown
+ *********************************************************/
+
 #include <stdio.h>
 #include <iostream>
 #include <ctime>
@@ -58,28 +65,26 @@ inline gs_tictactoe_index gs_tictactoe_reset(gs_tictactoe game)
 	return total;
 }
 
-
 //-----------------------------------------------------------------------------
 // DEFINITIONS
 
-bool IntChecker(int input);
-bool CharChecker(char input);
-char choose_char(char choice);
+//Function Prototypes
+bool intChecker(int input, int size);
+bool charChecker(char input);
+char player1Assign(char choice);
 char player2Assign(char P1, char P2);
 bool moveChecker(int row, int col, char player);
 char spotReturner(int row, int col, char player);
 char spot(char spot, int row, int col);
 bool playerSwapTurn(bool player);
-
 char player1Swapper(char P1, char P2, bool player);
 char player2Swapper(char P1, char P2, bool player);
-
 bool overwriteCheck(int row, int col, char);
 bool checkGameState(char spot1, char spot2, char spot3, char spot4, char spot5, char spot6, char spot7, char spot8, char spot9);
 bool Win(char player);
 bool playAgain(char);
-//const int TRUE = 32;
 
+//TicTacToe Main
 int launchTicTacToe()
 {
 	gs_tictactoe game;
@@ -87,31 +92,32 @@ int launchTicTacToe()
 	bool gameEnd = false;
 
 	do {
+		system("cls");
+
 		int rowNum = 0;
 		int colNum = 0;
 		bool invalid = 0;
-		
 		char P1 = ' ';
 		char P2 = ' ';
 		char temp1;
 		char temp2;
 		bool player = true;
-
 		char spot1 = '1', spot2 = '2', spot3 = '3', spot4 = '4',
 			spot5 = '5', spot6 = '6', spot7 = '7', spot8 = '8', spot9 = '9';
 		char spotty = ' ';
-		
 		bool winCon = false;
 		int turn = 0;
 		char playagain = ' ';
+		int board_size = 3;
+
 		cout << "Welcome to TicTacToe!" << endl << endl;
 		do
 		{
 			cout << " Player 1, do you want X's or O's? ";
 			cin >> P1;
-			P1 = choose_char(P1);
+			P1 = player1Assign(P1);
 			P2 = player2Assign(P1, P2);
-			invalid = CharChecker(P1);
+			invalid = charChecker(P1);
 			cout << endl << endl;
 		
 		} while (invalid == true);
@@ -126,15 +132,14 @@ int launchTicTacToe()
 				cout << "Enter column from 1-3: ";
 				cin >> colNum;
 				cout << endl;
-				invalid = IntChecker(colNum);
-
+				invalid = intChecker(static_cast<int>(colNum), board_size);
 			} while (invalid == true);
 			do
 			{
 				cout << "Enter row number from 1-3: ";
 				cin >> rowNum;
 				cout << endl;
-				invalid = IntChecker(rowNum);
+				invalid = intChecker(static_cast<int>(rowNum), board_size);
 			} while (invalid == true);
 
 			cout << endl << endl;
@@ -215,12 +220,13 @@ int launchTicTacToe()
 				}
 			}
 
-
+			//Make draw board function Here
 			cout << " " << spot1 << " | " << spot2 << " | " << spot3 << endl;
 			cout << "---|---|---" << endl;
 			cout << " " << spot4 << " | " << spot5 << " | " << spot6 << endl;
 			cout << "---|---|---" << endl;
 			cout << " " << spot7 << " | " << spot8 << " | " << spot9 << endl;
+			// Do this next ^^^^
 
 			winCon = checkGameState(spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9);
 
@@ -230,7 +236,6 @@ int launchTicTacToe()
 				turn--;
 			}
 			
-			//Make the below a function.  Then, put said function inside of each 'spot'!
 			if (48 < open && open < 58)
 			{
 				if (player == true)
@@ -263,7 +268,10 @@ int launchTicTacToe()
 	return 0;
 }
 
-bool CharChecker(char input) {
+/*
+	Purpose:	Checks player one's player character, X or O.
+*/
+bool charChecker(char input) {
 	if (input != 'O')
 	{ 
 		if(input != 'X')
@@ -276,17 +284,10 @@ bool CharChecker(char input) {
 	return false;
 }
 
-bool IntChecker(int input) {
-	if ((input > 3) || (input < 0))
-	{
-		cout << "That is an invalid input." << endl;
-		cout << "Please try again!" << endl;
-		return true;
-	}
-	return false;
-}
-
-char choose_char(char choice)
+/*
+	Purpose:	Assigns character to player1
+*/
+char player1Assign(char choice)
 {
 	char player1 = 'x';
 	char player2 = 'o';
@@ -303,6 +304,9 @@ char choose_char(char choice)
 	return player1;
 }
 
+/*
+	Purpose:	Assigns character to player2
+*/
 char player2Assign(char P1, char P2) {
 	if (P1 == 'X')
 		P2 = 'O';
@@ -311,6 +315,9 @@ char player2Assign(char P1, char P2) {
 	return P2;
 }
 
+/*
+	Purpose:	Checks if the space is open
+*/
 bool moveChecker(int row, int col, char player)
 {
 	if (row == 1 && col == 1)
@@ -424,6 +431,9 @@ bool moveChecker(int row, int col, char player)
 	return true;
 }
 
+/*
+	Purpose:	Allows the current player to place in a spot
+*/
 char spotReturner(int row, int col, char player)
 {
 	if (row == 1 && col == 1)
@@ -466,7 +476,12 @@ char spotReturner(int row, int col, char player)
 		return ' ';
 }
 
-//Board function
+//Board functions below
+//************************************************************
+
+/*
+	Purpose:	Places the current player's character on the given spot
+*/
 char spot(char spot, int row, int col)
 {
 	if (row == 1 && col == 1)
@@ -509,6 +524,9 @@ char spot(char spot, int row, int col)
 		return ' ';
 }
 
+/*
+	Purpose:	Swaps player1's character with player2's character
+*/
 char player1Swapper(char P1, char P2, bool player)
 {
 	char temp;
@@ -518,6 +536,10 @@ char player1Swapper(char P1, char P2, bool player)
 	return P1;
 
 }
+
+/*
+	Purpose:	Swaps player2's character with player1's character
+*/
 char player2Swapper(char P1, char P2, bool player)
 {
 	char temp;
@@ -527,6 +549,9 @@ char player2Swapper(char P1, char P2, bool player)
 	return P2;
 }
 
+/*
+	Purpose:	Checks if the given spot has already been used
+*/
 bool overwriteCheck(int row, int col, char spotNum) {
 	if (row == 1 && col == 1)
 	{
@@ -667,6 +692,9 @@ bool overwriteCheck(int row, int col, char spotNum) {
 		return true;
 }
 
+/*
+	Purpose:	Checks if the win condition has been met
+*/
 bool checkGameState(char spot1, char spot2, char spot3, char spot4, char spot5, char spot6, char spot7, char spot8, char spot9) {
 	//Horz
 	if (spot1 == spot2 && spot2 == spot3)

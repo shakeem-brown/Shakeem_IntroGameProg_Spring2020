@@ -1,5 +1,11 @@
-// GPRO-FW-Launcher.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+/*	GPRO-FW-Launcher.cpp: This file contains the 'main' function.
+                          Program execution begins and ends there.
+ *  Purpose:              Houses the main for the various games
+                          within this frame work.
+ *	Contributors:		  This Framework was made in collaboration
+				          by Andrew Barnett and Shakeem Brown
+ *********************************************************/
+
 #include <stdio.h>
 #include <iostream>
 #include "GamePro-00-20/Fillorino.h"
