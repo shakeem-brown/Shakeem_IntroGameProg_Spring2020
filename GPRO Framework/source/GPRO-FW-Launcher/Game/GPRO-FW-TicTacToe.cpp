@@ -7,66 +7,11 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <string>
 #include <ctime>
 #include "GamePro-00-20/Fillorino.h"
 
 using namespace std;
-//-----------------------------------------------------------------------------
-// DECLARATIONS
-
-#define GS_TICTACTOE_PLAYERS					2
-#define GS_TICTACTOE_BOARD_WIDTH				3
-#define GS_TICTACTOE_BOARD_HEIGHT				3
-
-enum gs_tictactoe_space_state
-{
-	// invalid space state
-	gs_tictactoe_space_invalid = -1,
-
-	// states visible to both players
-	gs_tictactoe_space_open,	// space is open
-	gs_tictactoe_space_o,		// space is taken by O player
-	gs_tictactoe_space_x,		// space is taken by X player
-};
-#ifndef __cplusplus
-typedef		enum gs_tictactoe_space_state		gs_tictactoe_space_state;
-#endif	// !__cplusplus
-
-// tic-tac-toe game state
-typedef		unsigned char						gs_tictactoe_index;
-typedef		gs_tictactoe_space_state			gs_tictactoe[GS_TICTACTOE_BOARD_WIDTH][GS_TICTACTOE_BOARD_HEIGHT];
-
-
-#define	GS_VALIDATE_COORDINATE(x,y,w,h)			(x < w && y < h)
-#define GS_TICTACTOE_VALID(x,y)					GS_VALIDATE_COORDINATE(x,y,GS_TICTACTOE_BOARD_WIDTH,GS_TICTACTOE_BOARD_HEIGHT)
-
-
-inline gs_tictactoe_space_state gs_tictactoe_getSpaceState(gs_tictactoe const game, gs_tictactoe_index const xpos, gs_tictactoe_index const ypos)
-{
-	if (GS_TICTACTOE_VALID(xpos, ypos))
-		return (game[xpos][ypos]);
-	return gs_tictactoe_space_invalid;
-}
-
-inline gs_tictactoe_space_state gs_tictactoe_setSpaceState(gs_tictactoe game, gs_tictactoe_space_state const state, gs_tictactoe_index const xpos, gs_tictactoe_index const ypos)
-{
-	if (GS_TICTACTOE_VALID(xpos, ypos))
-		return (game[xpos][ypos] = state);
-	return gs_tictactoe_space_invalid;
-}
-
-inline gs_tictactoe_index gs_tictactoe_reset(gs_tictactoe game)
-{
-	gs_tictactoe_index xpos, ypos, total;
-	for (xpos = 0; xpos < GS_TICTACTOE_BOARD_WIDTH; ++xpos)
-		for (ypos = 0; ypos < GS_TICTACTOE_BOARD_HEIGHT; ++ypos)
-			game[xpos][ypos] = gs_tictactoe_space_open;
-	total = (xpos * ypos);
-	return total;
-}
-
-//-----------------------------------------------------------------------------
-// DEFINITIONS
 
 //Function Prototypes
 bool intChecker(int input, int size);
@@ -83,12 +28,16 @@ bool overwriteCheck(int row, int col, char);
 bool checkGameState(char spot1, char spot2, char spot3, char spot4, char spot5, char spot6, char spot7, char spot8, char spot9);
 bool Win(char player);
 bool playAgain(char);
+void displayBoard(char array[], int arraySize, int condition, string newLineArray);
+
+const int BOARD_SIZE = 3;
+const int ARRAY_SIZE = 30;
+const int NEW_LINE = ARRAY_SIZE / BOARD_SIZE;
+const string LINE_DIVIDER = "---|---|---";
 
 //TicTacToe Main
 int launchTicTacToe()
 {
-	gs_tictactoe game;
-	gs_tictactoe_reset(game);
 	bool gameEnd = false;
 
 	do {
@@ -108,8 +57,10 @@ int launchTicTacToe()
 		bool winCon = false;
 		int turn = 0;
 		char playagain = ' ';
-		int board_size = 3;
-
+		char boardArray[] = { ' ', spot1, ' ', '|', ' ', spot2,' ', '|', ' ',
+			spot3,' ', spot4, ' ', '|', ' ', spot5,' ', '|', ' ', spot6,' ',
+			spot7, ' ', '|', ' ', spot8,' ', '|', ' ', spot9 };
+	
 		cout << "Welcome to TicTacToe!" << endl << endl;
 		do
 		{
@@ -132,14 +83,14 @@ int launchTicTacToe()
 				cout << "Enter column from 1-3: ";
 				cin >> colNum;
 				cout << endl;
-				invalid = intChecker(static_cast<int>(colNum), board_size);
+				invalid = intChecker(static_cast<int>(colNum), BOARD_SIZE);
 			} while (invalid == true);
 			do
 			{
 				cout << "Enter row number from 1-3: ";
 				cin >> rowNum;
 				cout << endl;
-				invalid = intChecker(static_cast<int>(rowNum), board_size);
+				invalid = intChecker(static_cast<int>(rowNum), BOARD_SIZE);
 			} while (invalid == true);
 
 			cout << endl << endl;
@@ -152,6 +103,7 @@ int launchTicTacToe()
 				if (open == 49) {
 					{
 						spot1 = spot(spotty, rowNum, colNum);
+						boardArray[1] = spot1;
 					}
 				}
 			}
@@ -161,6 +113,7 @@ int launchTicTacToe()
 				if (open == 50)
 				{
 					spot2 = spot(spotty, rowNum, colNum);
+					boardArray[5] = spot2;
 				}
 			}
 			else if (rowNum == 1 && colNum == 3)
@@ -169,6 +122,7 @@ int launchTicTacToe()
 				if (open == 51)
 				{
 					spot3 = spot(spotty, rowNum, colNum);
+					boardArray[9] = spot3;
 				}
 			}
 			else if (rowNum == 2 && colNum == 1)
@@ -177,6 +131,7 @@ int launchTicTacToe()
 				if (open == 52)
 				{
 					spot4 = spot(spotty, rowNum, colNum);
+					boardArray[11] = spot4;
 				}
 			}
 			else if (rowNum == 2 && colNum == 2)
@@ -185,6 +140,7 @@ int launchTicTacToe()
 				if (open == 53)
 				{
 					spot5 = spot(spotty, rowNum, colNum);
+					boardArray[15] = spot5;
 				}
 			}
 			else if (rowNum == 2 && colNum == 3)
@@ -193,6 +149,7 @@ int launchTicTacToe()
 				if (open == 54)
 				{
 					spot6 = spot(spotty, rowNum, colNum);
+					boardArray[19] = spot6;
 				}
 			}
 			else if (rowNum == 3 && colNum == 1)
@@ -201,6 +158,7 @@ int launchTicTacToe()
 				if (open == 55)
 				{
 					spot7 = spot(spotty, rowNum, colNum);
+					boardArray[21] = spot7;
 				}
 			}
 			else if (rowNum == 3 && colNum == 2)
@@ -209,6 +167,7 @@ int launchTicTacToe()
 				if (open == 56)
 				{
 					spot8 = spot(spotty, rowNum, colNum);
+					boardArray[25] = spot8;
 				}
 			}
 			else if (rowNum == 3 && colNum == 3)
@@ -217,17 +176,11 @@ int launchTicTacToe()
 				if (open == 57)
 				{
 					spot9 = spot(spotty, rowNum, colNum);
+					boardArray[29] = spot9;
 				}
 			}
 
-			//Make draw board function Here
-			cout << " " << spot1 << " | " << spot2 << " | " << spot3 << endl;
-			cout << "---|---|---" << endl;
-			cout << " " << spot4 << " | " << spot5 << " | " << spot6 << endl;
-			cout << "---|---|---" << endl;
-			cout << " " << spot7 << " | " << spot8 << " | " << spot9 << endl;
-			// Do this next ^^^^
-
+			displayBoard(boardArray, ARRAY_SIZE, NEW_LINE, LINE_DIVIDER);
 			winCon = checkGameState(spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9);
 
 			if (winCon == true)

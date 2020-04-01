@@ -8,17 +8,27 @@
 #include <stdio.h>
 #include <iostream>
 #include <ctime>
+#include <string>
 #include "GamePro-00-20/Fillorino.h"
 
 /*
 	Purpose:	Draws the board state using the given height and width
 */
-void drawBoard(int width, int height, char v[]) {
-	for (int i = 0; i < width; i++)
+using namespace std;
+
+void displayBoard(char array[], int arraySize, int condition, string newLineArray)
+{
+	for (int i = 0; i < arraySize; i++)
 	{
-		for (int j = 0; j < height; j++)
+		if (i != 0)
 		{
-			char v[] = { i };
+			if ((i % condition) == 0)
+			{
+				cout << endl;
+				cout << newLineArray << endl;
+			}
 		}
+		cout << array[i];
 	}
+	cout << endl << endl;
 }

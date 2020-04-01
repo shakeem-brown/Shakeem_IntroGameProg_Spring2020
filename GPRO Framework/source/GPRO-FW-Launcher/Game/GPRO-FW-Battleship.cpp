@@ -80,7 +80,7 @@ void showDefBoard(bool player, char array[10][10], int*& row, int*& column);
 bool playerSwapTurn(bool player);
 void placement(int*& row, int*& column);
 char* modifyDefBoard(bool player, static char array[][10], int*& row, int*& column, char ship1[5], char ship2[5], char ship3[5], char ship4[5], char ship5[5]);
-
+void displayBoard(char array[], int arraySize, int condition, string newLineArray);
 
 //-----------------------------------------------------------------------------
 // DEFINITIONS
