@@ -18,4 +18,4 @@ The Menu allows the player to choose the game they want to play from a selection
 As the name implies, this game functions like the on-paper version of TicTacToe. Unlike the real game, however, you do not have to worry about running out of paper. You are allowed to play as much as your heart desires.
 
 Future Plans:
-This Framework will be used as our final project of Intro to Game Programming. Afterwhich it will most likely never see the light of day again. Despite this, the use of a menu system will be implemented in our future projects.
+This Framework will be used as our final project of Intro to Game Programming. After which it will most likely never see the light of day again. Despite this, the use of a menu system will be implemented in our future projects.
