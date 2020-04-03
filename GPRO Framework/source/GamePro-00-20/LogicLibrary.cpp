@@ -75,6 +75,12 @@ bool intChecker(int input, int size) {
 		cout << "Please try again!" << endl;
 		return true;
 	}
+	else if (input == 0)
+	{
+		cout << "That is an invalid input." << endl;
+		cout << "Please try again!" << endl;
+		return true;
+	}
 	else
 	{
 		return false;

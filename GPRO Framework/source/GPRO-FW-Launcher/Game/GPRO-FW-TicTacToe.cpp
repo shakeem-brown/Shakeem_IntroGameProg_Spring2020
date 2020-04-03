@@ -210,6 +210,7 @@ int launchTicTacToe()
 			if (turn == 9)
 			{
 				cout << "DRAW!" << endl;
+				gameEnd = true;
 			}
 
 		} while (gameEnd == false);
